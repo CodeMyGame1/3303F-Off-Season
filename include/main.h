@@ -10,6 +10,8 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * TODO: colorized terminal output! (see if vex brain's terminal supports it)
  */
 
 #ifndef _PROS_MAIN_H_
@@ -34,13 +36,39 @@
  */
 #define PROS_USE_LITERALS
 
+#include <string>
+#include <map>
+#include <functional>
+
 #include "api.h"
+#include "lemlib/api.hpp"
+#include "pros/apix.h"
+
+#include "autons.hpp"
+#include "hang.hpp"
+#include "intake.hpp"
+#include "wings.hpp"
+#include "slapper.hpp"
+
+#include "selection.hpp"
+
+extern lemlib::Chassis chassis;
+extern Intake intake;
+// vertical wings... (for autons)
+extern Wings vert_wings;
+// horizontal wings... (for autons)
+extern Wings horiz_wings;
+extern Hang hang;
 
 /**
  * You should add more #includes here
  */
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
+
+#define RED_AUTON_RUSH 1
+#define BLUE_AUTON_RUSH -1
+#define SKILLS 0
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
