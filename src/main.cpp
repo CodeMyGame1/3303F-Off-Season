@@ -4,6 +4,7 @@
  * TODO: should i be using #pragma once everywhere?
 */
 #include "main.h"
+#include "lemlib/chassis/chassis.hpp"
 
 /**
  * START CONSTS: (GENERAL)
@@ -59,25 +60,21 @@ pros::Imu inertial_sensor(1);
  * START CONSTS: (LEMLIB)
 */
 
-lemlib::Drivetrain drivetrain {
+lemlib::Drivetrain_t drivetrain {
     &left_drive 					// left drivetrain motors
 
     , &right_drive 					// right drivetrain motors
 	
     , 17							// (track) width (of le robor)
 
-    , 3.25							// wheel diameter
+    , 2.75							// wheel diameter
 
-    , 450 							// wheel rpm
-
-	, lemlib::Omniwheel::NEW_325_HALF 	// chase power (specific to wheel type).
-										// in this case, we are using the NEW (wheels NOT colored green)
-										// omniwheels!
+    , 600 							// wheel rpm
 };
 
 
 // helps with odometry
-lemlib::OdomSensors sensors {
+lemlib::OdomSensors_t sensors {
     nullptr 			// vertical tracking wheel 1
     , nullptr 			// vertical tracking wheel 2
     , nullptr 			// horizontal tracking wheel 1
@@ -85,15 +82,10 @@ lemlib::OdomSensors sensors {
     , &inertial_sensor 	// inertial sensor
 };
 
-
-lemlib::ControllerSettings linearController(
+lemlib::ChassisController_t linearController (
 	9 		// kP (proportional constant for PID)
 
-	, 0 	// kI (integral constant for PID)
-
 	, 7 	// kD (derivative constant for PID)
-
-	, 0 	// anti-windup term (prevents large overshoots/oscillations)
 
 	, 1		// small error (the error at which the PID
 			// will switch to a slower control loop)
@@ -111,7 +103,7 @@ lemlib::ControllerSettings linearController(
 );
 
 
-lemlib::ControllerSettings angularController(
+lemlib::ControllerSettings_t angularController(
 	3 		// kP (proportional constant for PID)
 
 	, 0 	// kI (integral constant for PID)

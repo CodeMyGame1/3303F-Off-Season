@@ -48,7 +48,6 @@
 #include "hang.hpp"
 #include "intake.hpp"
 #include "wings.hpp"
-#include "slapper.hpp"
 
 #include "selection.hpp"
 
