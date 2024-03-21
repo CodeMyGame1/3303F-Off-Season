@@ -1,4 +1,4 @@
-#include "main.h"
+#include "hang.hpp"
 
 Hang::Hang(
     std::int8_t hang_motor_port

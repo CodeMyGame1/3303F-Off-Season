@@ -1,4 +1,4 @@
-#include "main.h"
+#include "wings.hpp"
 #include <vector>
 
 Wings::Wings (

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "main.h"
+#include "pros/adi.hpp"
+#include <vector>
 
 class Wings {
     public:
