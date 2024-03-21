@@ -1,4 +1,6 @@
 #include "main.h"
+#include "lemlib/chassis/chassis.hpp"
+#include "lemlib/chassis/trackingWheel.hpp"
 
 // maximum drive speed for drivetrain
 const int DRIVE_SPEED = 127;
@@ -8,7 +10,7 @@ const int DELAY_TIME = 20;
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 /**
- * TODO: set left motor & right motor ports
+ * TODO: set ports
 */
 // left motor definitions -- all reversed!
 pros::Motor left_back_motor(-0);
@@ -32,7 +34,57 @@ pros::Motor_Group right_motors({
 	, right_front_motor
 });
 
+pros::IMU inertial_sensor(0); 
 
+// lemlib
+
+lemlib::OdomSensors sensors {
+    nullptr 			// vertical tracking wheel 1
+    , nullptr 			// vertical tracking wheel 2
+    , nullptr 			// horizontal tracking wheel 1
+    , nullptr 			// we don't have a second tracking wheel, so we set it to nullptr
+    , &inertial_sensor 	// inertial sensor
+};
+
+lemlib::Drivetrain drivetrain(
+	&left_motors, 
+	&right_motors, 
+	17, 
+	2.75, 
+	600, 
+	lemlib::Omniwheel::NEW_275
+);
+
+lemlib::ControllerSettings linearController(
+	9 		// kP (proportional constant for PID)
+	, 0 	// kI (integral constant for PID)
+	, 7 	// kD (derivative constant for PID)
+	, 0 	// anti-windup term (prevents large overshoots/oscillations)
+	, 1		// small error (the error at which the PID will switch to a slower control loop)
+	, 100	// small error timeout (how long the PID will wait before switching to a slower control loop)
+	, 3		// large error (the error at which the PID) will switch to a faster control loop
+	, 500	// large error timeout (how long the PID will wait before switching to a faster control loop)
+	, 0		// slew rate (the maximum acceleration of the PID)
+);
+
+lemlib::ControllerSettings angularController(
+	3 		// kP (proportional constant for PID)
+	, 0 	// kI (integral constant for PID)
+	, 16 	// kD (derivative constant for PID)
+	, 0 	// anti-windup term (prevents large overshoots/oscillations)
+	, 1		// small error (the error at which the PID will switch to a slower control loop)
+	, 100	// small error timeout (how long the PID will wait before switching to a slower control loop)
+	, 3		// large error (the error at which the PID)// slew rate (the maximum acceleration of the PID) will switch to a faster control loop)
+	, 500	// large error timeout (how long the PID will wait before switching to a faster control loop)
+	, 0		// slew rate (the maximum acceleration of the PID)
+);
+
+lemlib::Chassis chassis(
+	drivetrain
+	, linearController
+	, angularController
+	, sensors
+);
 
 /**
  * TODO: set vertical wing & horizontal wing ports
@@ -117,30 +169,7 @@ void opcontrol() {
 		 * MOVEMENT
 		*/
 
-		int dir = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-		int turn = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-
-		left_motors.move(
-			(
-				// gets the voltage we'd normally be setting the left motors to
-				(dir + turn)
-				// turns into a "unit" speed
-				/ 127.0
-			)
-			// scales by max drive speed
-			* DRIVE_SPEED
-		);
-
-		right_motors.move(
-			(
-				// gets the voltage we'd normally be setting the right motors to
-				(dir - turn)
-				// turns into a "unit" speed
-				/ 127.0
-			)
-			// scales by max drive speed
-			* DRIVE_SPEED
-		);
+		chassis.arcade(-controller.get_analog(ANALOG_RIGHT_Y), controller.get_analog(ANALOG_LEFT_X));
 
 		/**
 		 * END MOVEMENT
