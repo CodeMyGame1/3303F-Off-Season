@@ -1,11 +1,11 @@
 {
     "py/object": "pros.conductor.project.Project",
     "py/state": {
-        "project_name": "bover bunder",
+        "project_name": "3303F-Off-Season",
         "target": "v5",
         "templates": {
             "kernel": {
-                "location": "/Users/sunnyfang/Library/Application Support/PROS/templates/kernel@3.8.2",
+                "location": "/home/pranesh/.config/pros/templates/kernel@3.8.2",
                 "metadata": {
                     "cold_addr": "58720256",
                     "cold_output": "bin/cold.package.bin",
@@ -166,7 +166,7 @@
                 "version": "3.8.2"
             },
             "okapilib": {
-                "location": "/Users/sunnyfang/Library/Application Support/PROS/templates/okapilib@4.8.0",
+                "location": "/home/pranesh/.config/pros/templates/okapilib@4.8.0",
                 "metadata": {
                     "origin": "pros-mainline"
                 },
