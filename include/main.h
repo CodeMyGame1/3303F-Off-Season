@@ -43,8 +43,14 @@
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
 #include "autons.hpp"
+#include "intake.hpp"
 #include "hang.hpp"
 #include "wings.hpp"
+
+extern lemlib::Chassis chassis;
+extern Intake intake;
+extern Wings horiz_wings;
+extern Wings left_vert_wing;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

@@ -9,18 +9,15 @@ const int DELAY_TIME = 20;
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-/**
- * TODO: set ports
-*/
-// left motor definitions -- all reversed!
-pros::Motor left_back_motor(-0);
-pros::Motor left_middle_motor(-0);
-pros::Motor left_front_motor(-0);
+// left motor definitions -- all normal, EXCEPT for middle (reversed!)
+pros::Motor left_back_motor(11);
+pros::Motor left_middle_motor(-12);
+pros::Motor left_front_motor(13);
 
-// right motor definitions -- all normal!
-pros::Motor right_back_motor(0);
-pros::Motor right_middle_motor(0);
-pros::Motor right_front_motor(0);
+// right motor definitions -- all reversed, EXCEPT for middle (normal!)
+pros::Motor right_back_motor(-20);
+pros::Motor right_middle_motor(18);
+pros::Motor right_front_motor(-19);
 
 // motors reversed
 pros::Motor_Group left_motors({
@@ -97,14 +94,15 @@ Wings horiz_wings = Wings({
 	'A'
 });
 
-/**
- * TODO: set hang ports!
-*/
 Hang hang = Hang({
-	0
+	10
 	, 'A' 
 });
 
+Intake intake = Intake(
+	-17,
+	pros::E_MOTOR_BRAKE_HOLD
+);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -145,7 +143,9 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	far_side_rush();
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -196,6 +196,9 @@ void opcontrol() {
 		bool B_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
 		// hang - down
 		bool X_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
+
+		bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
+		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 		
 		/**
 		 * END FETCHING CONTROLS
@@ -205,6 +208,14 @@ void opcontrol() {
 		/**
 		 * HANDLING CONTROLS
 		*/
+
+		if (R1_pressed == R2_pressed) {
+			intake.brake();
+		} else if (R1_pressed) {
+			intake.intake();
+		} else if (R2_pressed) {
+			intake.outake();
+		}
 
 		if (L1_new_press) {
 			horiz_wings.toggle();
@@ -219,7 +230,7 @@ void opcontrol() {
 		}
 
 		// if hang wants to be both opened and closed, or buttons aren't being pressed, brake the hang
-		if (!(B_pressed and X_pressed)) {
+		if (B_pressed == X_pressed) {
 			hang.stop_hang();
 		// open hang (hold)
 		} else if (B_pressed) {
