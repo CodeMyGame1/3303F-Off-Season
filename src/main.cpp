@@ -145,6 +145,8 @@ void initialize() {
 	inertial_sensor.reset();
 
 	pros::Task screenTask(screenTaskFunc, &chassis);
+
+	//Aarav farted all over the robot
 }
 
 /**
