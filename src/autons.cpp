@@ -4,6 +4,20 @@
  * TODO: should max speed be 127 and min speed by 0? should there be an earlyExitRange?
 */
 
+void auton_test() {
+    chassis.moveToPoint(0, 10, 1500, { false, 127, 0, 0 }, false);
+};
+
+void pid_move_test() {
+    chassis.moveToPoint(0, 24, 5000, { true, 127, 0, 0 }, false);
+};
+
+void pid_turn_test() {
+    chassis.setPose(0, 0, 0);
+
+    chassis.turnToPoint(0, -30, 5000, { true, 127, 0, 0 }, false);
+}
+
 /**
  * reference: https://www.instagram.com/reel/C3guQxvI1Hi (start pos/orientation same as reference!)
  * 

@@ -8,6 +8,21 @@
 
 #include "main.h"
 
+/**
+ * Moves FORWARD 10 inches
+*/
+void auton_test();
+
+/**
+ * Moves FORWARD 24 inches
+*/
+void pid_move_test();
+
+/**
+ * Turns RIGHT 90 degrees
+*/
+void pid_turn_test();
+
 // 6 ball win point?
 void far_side_rush();
 

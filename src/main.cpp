@@ -31,7 +31,7 @@ pros::Motor_Group right_motors({
 	, right_front_motor
 });
 
-pros::IMU inertial_sensor(0); 
+pros::Imu inertial_sensor(2); 
 
 // lemlib
 
@@ -52,10 +52,13 @@ lemlib::Drivetrain drivetrain(
 	lemlib::Omniwheel::NEW_275
 );
 
+// kP 6 -> starts overshooting w/o oscillation
+// kP 10 -> overshot more, SLIGHT oscillation!
+// kD 6 -> why is it still oscillating?!?!?!
 lemlib::ControllerSettings linearController(
-	9 		// kP (proportional constant for PID)
+	10 		// kP (proportional constant for PID)
 	, 0 	// kI (integral constant for PID)
-	, 7 	// kD (derivative constant for PID)
+	, 12 	// kD (derivative constant for PID)
 	, 0 	// anti-windup term (prevents large overshoots/oscillations)
 	, 1		// small error (the error at which the PID will switch to a slower control loop)
 	, 100	// small error timeout (how long the PID will wait before switching to a slower control loop)
@@ -65,7 +68,7 @@ lemlib::ControllerSettings linearController(
 );
 
 lemlib::ControllerSettings angularController(
-	3 		// kP (proportional constant for PID)
+	3 	// kP (proportional constant for PID)
 	, 0 	// kI (integral constant for PID)
 	, 16 	// kD (derivative constant for PID)
 	, 0 	// anti-windup term (prevents large overshoots/oscillations)
@@ -104,6 +107,30 @@ Intake intake = Intake(
 	pros::E_MOTOR_BRAKE_HOLD
 );
 
+void screenTaskFunc(void* chassis) {
+	// we need to pass in chassis as a void* type, and then
+	// cast void* to lemlib::Chassis* within the function because 
+	// pros is kinda dumb ngl
+	lemlib::Chassis *myChassis = (lemlib::Chassis *)chassis;
+
+	while (true) {
+		// print robot location & heading to the brain screen
+		pros::lcd::print(4, "X: %f", myChassis->getPose().x); // x
+		pros::lcd::print(5, "Y: %f", myChassis->getPose().y); // y
+		pros::lcd::print(6, "Heading: %f", myChassis->getPose().theta); // heading
+		pros::lcd::print(7, "IMU Heading: %f", inertial_sensor.get_heading()); // IMU heading
+		
+		// log position telemetry
+		lemlib::telemetrySink()->info(
+			"Chassis pose: {}"
+			, myChassis->getPose()
+		);
+		
+		// delay to save resources
+		pros::delay(DELAY_TIME);
+	}
+}
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -112,6 +139,12 @@ Intake intake = Intake(
  */
 void initialize() {
 	pros::lcd::initialize();
+
+	chassis.calibrate();
+
+	inertial_sensor.reset();
+
+	pros::Task screenTask(screenTaskFunc, &chassis);
 }
 
 /**
@@ -144,7 +177,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	far_side_rush();
+	pid_turn_test();
 }
 
 /**
@@ -169,7 +202,7 @@ void opcontrol() {
 		 * MOVEMENT
 		*/
 
-		chassis.arcade(-controller.get_analog(ANALOG_RIGHT_Y), controller.get_analog(ANALOG_LEFT_X));
+		chassis.arcade(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_X));
 
 		/**
 		 * END MOVEMENT
