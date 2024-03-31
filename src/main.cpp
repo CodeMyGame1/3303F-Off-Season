@@ -1,3 +1,8 @@
+/**
+ * IT'S IMPORTANT TO NOTE THAT THE AUTON CODE TREATS THE INTAKE AS THE FRONT,
+ * WHILE WHEN ACTUALLY DRIVING, THE NON-INTAKE SIDE OF THE ROBOT IS THE FRONT
+*/
+
 #include "main.h"
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/trackingWheel.hpp"
@@ -7,27 +12,49 @@ const int DRIVE_SPEED = 127;
 // amount of time, in milliseconds, to delay between each pros `opcontrol()` loop
 const int DELAY_TIME = 20;
 
+// left horiz A
+// right horiz B
+// vert wing C
+// hang ratchet D
+
+// -1 3
+
+// seeems to be correcttt
+// 1 -3
+
+// one side go faster
+// 1 3
+// -1 -3
+
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-// left motor definitions -- all normal, EXCEPT for middle (reversed!)
-pros::Motor left_back_motor(11);
-pros::Motor left_middle_motor(-12);
-pros::Motor left_front_motor(13);
+// left motor definitions -- all reversed, EXCEPT for middle (normal!)
+pros::Motor left_back_motor(-13);
+pros::Motor left_front_middle_motor(-11);
+pros::Motor left_back_middle_motor(12);
+// pros::Motor left_front_motor(1);
+pros::Motor left_front_motor(1);
 
-// right motor definitions -- all reversed, EXCEPT for middle (normal!)
-pros::Motor right_back_motor(-20);
-pros::Motor right_middle_motor(18);
-pros::Motor right_front_motor(-19);
+// right motor definitions -- all normal, EXCEPT for middle (reversed!)
+pros::Motor right_back_motor(19); // ACTUAL BACK
+pros::Motor right_back_middle_motor(-18);
+pros::Motor right_front_middle_motor(20);
+// pros::Motor right_front_motor(-3);
+pros::Motor right_front_motor(-3);
+
+// auton left 1
 
 // motors reversed
 pros::Motor_Group left_motors({
 	left_back_motor
-	, left_middle_motor
+	, left_back_middle_motor
+	, left_front_middle_motor
 	, left_front_motor
 });
 pros::Motor_Group right_motors({
 	right_back_motor
-	, right_middle_motor
+	, right_back_middle_motor
+	, right_front_middle_motor
 	, right_front_motor
 });
 
@@ -87,15 +114,11 @@ lemlib::Chassis chassis(
 );
 
 /**
- * TODO: set vertical wing & horizontal wing ports
+ * TODO: set vertical wing & horizontal wing ports & hang ratchet ports
 */
-Wings left_vert_wing = Wings({
-	'A'
-});
+Wings left_vert_wing = Wings('A');
 
-Wings horiz_wings = Wings({
-	'A'
-});
+Wings horiz_wings = Wings('A', 'A');
 
 Hang hang = Hang({
 	10
@@ -179,7 +202,9 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	pid_turn_test();
+	printf("and may god save our souls");
+
+	// pid_turn_test();
 }
 
 /**
@@ -204,7 +229,7 @@ void opcontrol() {
 		 * MOVEMENT
 		*/
 
-		chassis.arcade(controller.get_analog(ANALOG_LEFT_Y), controller.get_analog(ANALOG_RIGHT_X));
+		chassis.arcade(-controller.get_analog(ANALOG_LEFT_Y), -controller.get_analog(ANALOG_RIGHT_X));
 
 		/**
 		 * END MOVEMENT

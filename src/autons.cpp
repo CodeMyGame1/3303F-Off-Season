@@ -33,10 +33,14 @@ void pid_turn_test() {
  * { bool forwards, int maxSpeed, int minSpeed, float earlyExitRange }
 */
 void far_side_rush() {
+    /**
+     * TODO: rewrite autons keeping intake as front!
+    */
+
     // yeet alliance triball
-    horiz_wings.open();
+    // horiz_wings.open();
     pros::delay(250);
-    horiz_wings.close();
+    // horiz_wings.close();
 
     // turns to center triball -- FRONT IS THE NON-INTAKE SIDE, SO HAVE TO DRIVE IN REVERSE!
     chassis.turnToPoint(-12, 48, 500, { false, 127, 0, 0 }, false);
@@ -84,7 +88,7 @@ void far_side_rush() {
     chassis.turnToPoint(24, 12, 500, { true, 127, 0, 0 }, false);
 
     // opens the one, lonely vertical wing D:
-    left_vert_wing.open();
+    // left_vert_wing.open();
 
     // starts moving (hopefully along matchload bar) and (hopefully) getting the triball out of the matchload bar!
     chassis.moveToPoint(24, 12, 750, { true, 127, 0, 0 }, false);
@@ -93,7 +97,7 @@ void far_side_rush() {
     chassis.turnToPoint(24, 36, 500, { true, 127, 0, 0 }, true);
 
     // closes vertical wing (at the same time?)
-    left_vert_wing.close();
+    // left_vert_wing.close();
 
     // waits for le turning to turn
     chassis.waitUntilDone();
@@ -173,9 +177,9 @@ void far_side_rush() {
 */
 void near_side_rush() {
     // yeet alliance triball
-    horiz_wings.open();
+    // horiz_wings.open();
     pros::delay(250);
-    horiz_wings.close();
+    // horiz_wings.close();
 
     // turn towards center triball
     chassis.turnToPoint(12, 60, 500, { false, 127, 0, 0 }, false);
