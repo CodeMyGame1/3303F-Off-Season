@@ -29,18 +29,18 @@ const int DELAY_TIME = 20;
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // left motor definitions -- all reversed, EXCEPT for middle (normal!)
-pros::Motor left_back_motor(-13);
-pros::Motor left_front_middle_motor(-11);
-pros::Motor left_back_middle_motor(12);
+pros::Motor left_back_motor(20);
+pros::Motor left_front_middle_motor(-18);
+pros::Motor left_back_middle_motor(19);
 // pros::Motor left_front_motor(1);
 pros::Motor left_front_motor(1);
 
 // right motor definitions -- all normal, EXCEPT for middle (reversed!)
-pros::Motor right_back_motor(19); // ACTUAL BACK
-pros::Motor right_back_middle_motor(-18);
-pros::Motor right_front_middle_motor(20);
+pros::Motor right_back_motor(13); // ACTUAL BACK
+pros::Motor right_back_middle_motor(-12);
+pros::Motor right_front_middle_motor(11);
 // pros::Motor right_front_motor(-3);
-pros::Motor right_front_motor(-3);
+pros::Motor right_front_motor(3);
 
 // auton left 1
 
@@ -82,7 +82,7 @@ lemlib::Drivetrain drivetrain(
 // kP 6 -> starts overshooting w/o oscillation
 // kP 10 -> overshot more, SLIGHT oscillation!
 // kD 6 -> why is it still oscillating?!?!?!
-lemlib::ControllerSettings linearController(
+lemlib::ControllerSettings linearController( // amon gus
 	10 		// kP (proportional constant for PID)
 	, 0 	// kI (integral constant for PID)
 	, 12 	// kD (derivative constant for PID)
@@ -229,7 +229,7 @@ void opcontrol() {
 		 * MOVEMENT
 		*/
 
-		chassis.arcade(-controller.get_analog(ANALOG_LEFT_Y), -controller.get_analog(ANALOG_RIGHT_X));
+		chassis.arcade(controller.get_analog(ANALOG_RIGHT_X), -controller.get_analog(ANALOG_LEFT_Y));
 
 		/**
 		 * END MOVEMENT
