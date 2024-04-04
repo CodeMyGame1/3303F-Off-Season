@@ -1,10 +1,13 @@
 #pragma once
 
 #include "main.h"
+#include <vector>
 
 class Intake {
     public:
-        pros::Motor intake_motor;
+        // pros::Motor intake_motor;
+
+        pros::Motor_Group intake_motors;
 
         pros::motor_brake_mode_e brake_mode;
 
@@ -13,7 +16,7 @@ class Intake {
          * 
          * sets intake motor brake mode to provided `brake_mode`!
         */
-        Intake(std::int8_t intake_motor_port, pros::motor_brake_mode_e brake_mode);
+        Intake(std::vector<std::int8_t> intake_motor_ports, pros::motor_brake_mode_e brake_mode);
 
         /**
          * runs the intake motor counterclockwise (AT MAX SPEED, -127), intaking triballs

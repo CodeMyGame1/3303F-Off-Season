@@ -28,21 +28,18 @@ const int DELAY_TIME = 20;
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-// left motor definitions -- all reversed, EXCEPT for middle (normal!)
+// left motor definitions -- NOTE THAT THESE DEFINITIONS ASSUME THE INTAKE IS THE FRONT OF THE ROBOT!
 pros::Motor left_back_motor(20);
 pros::Motor left_front_middle_motor(-18);
 pros::Motor left_back_middle_motor(19);
 // pros::Motor left_front_motor(1);
-pros::Motor left_front_motor(1);
+pros::Motor left_front_motor(5);
 
-// right motor definitions -- all normal, EXCEPT for middle (reversed!)
-pros::Motor right_back_motor(13); // ACTUAL BACK
+// right motor definitions -- NOTE THAT THESE DEFINITIONS ASSUME THE INTAKE IS THE FRONT OF THE ROBOT!
+pros::Motor right_back_motor(13);
 pros::Motor right_back_middle_motor(-12);
 pros::Motor right_front_middle_motor(11);
-// pros::Motor right_front_motor(-3);
 pros::Motor right_front_motor(3);
-
-// auton left 1
 
 // motors reversed
 pros::Motor_Group left_motors({
@@ -114,19 +111,16 @@ lemlib::Chassis chassis(
 );
 
 /**
- * TODO: set vertical wing & horizontal wing ports & hang ratchet ports
+ * TODO: set vertical wing & horizontal wing ports & hang ports
 */
 Wings left_vert_wing = Wings('A');
 
 Wings horiz_wings = Wings('A', 'A');
 
-Hang hang = Hang({
-	10
-	, 'A' 
-});
+Hang hang = Hang('H');
 
 Intake intake = Intake(
-	-17,
+	{ -17, 4 },
 	pros::E_MOTOR_BRAKE_HOLD
 );
 
@@ -246,8 +240,6 @@ void opcontrol() {
 		bool L1_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1);
 		// left vertical wing
 		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
-		// hang ratchet
-		bool UP_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
 
 
 		// HOLD CONTROLS
@@ -256,8 +248,9 @@ void opcontrol() {
 		bool B_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
 		// hang - down
 		bool X_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
-
+		// intake
 		bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
+		// outtake
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 		
 		/**
@@ -285,15 +278,10 @@ void opcontrol() {
 			left_vert_wing.toggle();
 		}
 
-		if (UP_new_press) {
-			hang.ratchet();
-		}
-
-		// if hang wants to be both opened and closed, or buttons aren't being pressed, brake the hang
-		if (B_pressed == X_pressed) {
-			hang.stop_hang();
+		// if hang wants to be both opened and closed, or buttons aren't being pressed, don't do anything
+		if (B_pressed == X_pressed) {}
 		// open hang (hold)
-		} else if (B_pressed) {
+		else if (B_pressed) {
 			hang.open_hang();
 		// close hang (hold)
 		} else if (X_pressed) {
