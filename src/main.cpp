@@ -3,6 +3,8 @@
  * WHILE WHEN ACTUALLY DRIVING, THE NON-INTAKE SIDE OF THE ROBOT IS THE FRONT
 */
 
+#include <iostream>
+
 #include "main.h"
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/chassis/trackingWheel.hpp"
@@ -113,11 +115,11 @@ lemlib::Chassis chassis(
 /**
  * TODO: set vertical wing & horizontal wing ports & hang ports
 */
-Wings left_vert_wing = Wings('A');
+Wings left_vert_wing = Wings('B');
 
-Wings horiz_wings = Wings('A', 'A');
+Wings horiz_wings = Wings('B', 'B');
 
-Hang hang = Hang('H');
+Hang hang = Hang('A');
 
 Intake intake = Intake(
 	{ -17, 4 },
@@ -196,7 +198,11 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	printf("and may god save our souls");
+	while (true) {
+		
+	}
+
+	controller.print(0, 0, "whas going on");
 
 	// pid_turn_test();
 }

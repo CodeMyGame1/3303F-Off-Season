@@ -1,5 +1,12 @@
 #include "main.h"
 
+lemlib::TurnToParams defaultTurnParams = {
+    true    // bool  : forwards
+    , 127   // int   : maxSpeed
+    , 0     // int   : minSpeed
+    , 0     // float : earlyExitRange
+};
+
 /**
  * TODO: should max speed be 127 and min speed by 0? should there be an earlyExitRange?
 */
@@ -25,8 +32,6 @@ void pid_turn_test() {
  * 
  * btw, x is side to side, and y is front and back!
  * 
- * RMBR: FRONT IS THE NON-INTAKE SIDE, SO IF YOU WANT TO USE THE INTAKE, YOU HAVE TO DRIVE IN REVERSE!
- * 
  * TODO: convert to use boomerang PID controller (chassis.moveToPose)!
  * 
  * for all moveToParams and turnToParams:
@@ -34,17 +39,33 @@ void pid_turn_test() {
 */
 void far_side_rush() {
     /**
-     * TODO: rewrite autons keeping intake as front!
+     * yeet alliance triball
     */
 
-    // yeet alliance triball
-    // horiz_wings.open();
+    // opens the right horizontal wing
+    horiz_wings.right_open();
+    // waits a bit for it to fully open
     pros::delay(250);
-    // horiz_wings.close();
+    // closes the right horizontal wing
+    horiz_wings.right_close();
 
-    // turns to center triball -- FRONT IS THE NON-INTAKE SIDE, SO HAVE TO DRIVE IN REVERSE!
-    chassis.turnToPoint(-12, 48, 500, { false, 127, 0, 0 }, false);
+
+    /**
+     * get center triball
+    */
+
+    // turns to center triball
+    chassis.turnToPoint(
+        -12                 // int          : x coordinate to turn towards
+        , 48                // int          : y coordinate to turn towards
+        , 500               // int          : how long to keep moving before u give up and move on
+        , defaultTurnParams // turnToParams : HOWW do i turn?
+        , false             // bool         : this command is NOT running asynchronously!
+    );
+
+    // turns on the intake
     intake.intake();
+
     // moves to center triball
     /**
      * NOTE: MIGHT BE OVERSHOOTING HERE; adjust distance to account for "height" of bot!
@@ -167,8 +188,6 @@ void far_side_rush() {
  * each tile is 24"; 2' * 6 tiles = 12' x 12' field dimension!
  * 
  * btw, x is side to side, and y is front and back!
- * 
- * RMBR: FRONT IS THE NON-INTAKE SIDE, SO IF YOU WANT TO USE THE INTAKE, YOU HAVE TO DRIVE IN REVERSE!
  * 
  * TODO: convert to use boomerang PID controller (chassis.moveToPose)!
  * 
