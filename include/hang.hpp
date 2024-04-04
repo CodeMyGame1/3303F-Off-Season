@@ -5,22 +5,17 @@
 
 class Hang {
     public:
-        pros::Motor hang_motor;
-        pros::ADIDigitalOut ratchetPiston;
+        // a 
+        pros::ADIDigitalOut hang_piston;
+        bool hang_piston_enabled = false;
 
         /**
          * initializes hang subsystem
-         * 
-         * INITIALLY RETRACTS RATCHET!
-         * 
-         * note: encoder units of `Hang::hang_motor` is set to degrees!
         */
-        Hang(std::int8_t hang_motor_port, std::uint8_t ratchet_piston_port);
+        Hang(std::uint8_t hang_piston_port);
 
-        /**
-         * opens and closes the hang, releasing the intake during the start of the autonomous period
-        */
-        void release_intake();
+        // updates the pistons 
+        void update();
 
         /**
          * runs the hang motor clockwise (AT MAX SPEED; 127), opens the hang
@@ -31,14 +26,4 @@ class Hang {
          * runs the hang motor counterclockwise (AT MAX SPEED; -127), closing the hang
         */
         void close_hang();
-
-        /**
-         * brakes (stops) the hang motor
-        */
-        void stop_hang();
-
-        /**
-         * enables the ratchet piston (ONLY ONE WAY), locking the hang in place
-        */
-        void ratchet();
 };

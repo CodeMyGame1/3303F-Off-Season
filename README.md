@@ -1,5 +1,6 @@
-# 3303F-Off-Season
+# 3303F-Off-Season-2
 A repository to house VRC team 3303F's off season code, for testing purposes
+**RECOMPILED** for pros version 3.8.3, LemLib version 0.5.0-rc.7 (**beta**)
 
 # Installing Packages
 1. Download the `.zip` file into the repository
